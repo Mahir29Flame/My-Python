@@ -1,0 +1,10 @@
+result_paper = []
+result_paper.append(float(input("what's the marks of Roll No. 11: ")))
+result_paper.append(float(input("what's the marks of Roll No. 12: ")))
+result_paper.append(float(input("what's the marks of Roll No. 13: ")))
+result_paper.append(float(input("what's the marks of Roll No. 14: ")))
+result_paper.append(float(input("what's the marks of Roll No. 15: ")))
+result_paper.append(float(input("what's the marks of Roll No. 16: ")))
+result_paper.sort()
+result_paper.reverse()
+print(result_paper)
