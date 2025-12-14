@@ -1,3 +1,4 @@
+Empty_Dict = {}
 marks  = {
     'Sami': 99,
     'Arik': 98,
