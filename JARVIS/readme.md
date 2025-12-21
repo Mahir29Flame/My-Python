@@ -1,0 +1,2 @@
+# I hate this BS project !!!!!!
+this is no longer the same in modules and apis as the vid and making it like me isnt very satisfying to me ! so ill make other one but not this one. imma make my own AI assistant
