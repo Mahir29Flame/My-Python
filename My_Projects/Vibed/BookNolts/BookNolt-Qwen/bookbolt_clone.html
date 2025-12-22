@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookBolt Clone - Your Ultimate Book Creation Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4ade80;
+            --warning: #facc15;
+            --danger: #f87171;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(67, 97, 238, 0.8), rgba(63, 55, 201, 0.9)), url('https://images.unsplash.com/photo-1495640388908-05fa85288e61?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn-lg {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+        }
+        
+        /* Features Section */
+        .section {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        /* Books Section */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .book-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .book-cover {
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .book-info {
+            padding: 1.5rem;
+        }
+        
+        .book-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .book-author {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .rating {
+            color: #facc15;
+        }
+        
+        /* Editor Section */
+        .editor-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .editor-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        #editor {
+            flex: 1;
+            padding: 1.5rem;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .editor-sidebar {
+            width: 300px;
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-left: 1px solid var(--light);
+            overflow-y: auto;
+        }
+        
+        .sidebar-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .pricing-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--success);
+            color: white;
+            padding: 0.3rem 2rem;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .pricing-header {
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-price span {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        
+        .pricing-features li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .editor-content {
+                flex-direction: column;
+            }
+            
+            .editor-sidebar {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid var(--light);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <span>BookBolt</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+                    <li><a href="#books"><i class="fas fa-book"></i> Books</a></li>
+                    <li><a href="#editor"><i class="fas fa-edit"></i> Editor</a></li>
+                    <li><a href="#pricing"><i class="fas fa-tag"></i> Pricing</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-outline">Log In</button>
+                <button class="btn btn-primary">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Create, Publish, and Sell Your Books</h1>
+            <p>BookBolt is the all-in-one platform for authors to write, format, and publish books with ease. Whether you're creating low-content books or full novels, we've got you covered.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary btn-lg">Get Started Free</button>
+                <button class="btn btn-outline btn-lg">View Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful Features</h2>
+                <p>Everything you need to create and publish professional books</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Easy Writing Tools</h3>
+                    <p>Intuitive editor with customizable templates to help you write faster and more efficiently.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>Professional Design</h3>
+                    <p>Beautiful templates and formatting tools to make your books look professional.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Publishing Support</h3>
+                    <p>Direct publishing to Amazon KDP and other platforms with optimized listings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Idea Generation</h3>
+                    <p>AI-powered tools to help generate book ideas and research trending topics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3>All-in-One Platform</h3>
+                    <p>Write, design, publish, and track your books all in one place.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure & Private</h3>
+                    <p>Your work is always secure with enterprise-grade encryption and privacy controls.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Books Section -->
+    <section id="books" class="section" style="background-color: #f8fafc;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Popular Books</h2>
+                <p>Discover books created with BookBolt platform</p>
+            </div>
+            <div class="books-grid">
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="book-info">
+                        <h3>The Midnight Chronicles</h3>
+                        <div class="book-author">By Alex Johnson</div>
+                        <div class="book-meta">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="price">$9.99</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1629992101753-56d196c8aabb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="book-info">
+                        <h3>Mountain Echoes</h3>
+                        <div class="book-author">By Sarah Williams</div>
+                        <div class="book-meta">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="price">$12.49</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                        <div class="book-info">
+                        <h3>Desert Dreams</h3>
+                        <div class="book-author">By Michael Chen</div>
+                        <div class="book-meta">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="price">$14.99</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover" style="background-image: url('https://images.unsplash.com/photo-1495640388908-05fa85288e61?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');"></div>
+                    <div class="book-info">
+                        <h3>Ocean Mysteries</h3>
+                        <div class="book-author">By Emma Rodriguez</div>
+                        <div class="book-meta">
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="price">$11.99</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Editor Section -->
+    <section id="editor" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Writing Editor</h2>
+                <p>Start creating your book with our powerful writing editor</p>
+            </div>
+            <div class="editor-container">
+                <div class="editor-header">
+                    <h3>My Novel - Chapter 1</h3>
+                    <div>
+                        <button class="btn btn-outline" style="margin-right: 10px;">Save</button>
+                        <button class="btn btn-primary">Publish</button>
+                    </div>
+                </div>
+                <div class="editor-content">
+                    <textarea id="editor" placeholder="Start writing your book here...">In a land far away, where the mountains touch the sky and the rivers flow with ancient wisdom, there lived a young adventurer named Elara. She had always dreamed of exploring the forbidden forest that bordered her village, but the elders warned that dangerous creatures dwelt within its shadowy depths.
+
+On the morning of her twentieth birthday, Elara could contain her curiosity no longer. She packed a small satchel with provisions and set out at dawn, her heart pounding with excitement and fear in equal measure. The forest loomed before her, its twisted branches forming a natural archway that seemed to beckon her forward.
+
+As she stepped across the threshold, the world behind her faded from view. The air grew cooler and the light dimmer, filtered through a canopy so thick that only dappled sunlight reached the forest floor. Strange sounds echoed around her - the hoot of unfamiliar owls, the rustle of leaves, and something that might have been whispers on the wind.
+
+Elara pressed forward, her courage fortified by her lifelong desire to explore. She had no way of knowing that her journey would lead to discoveries that would change not only her life, but the fate of her entire world.
+</textarea>
+                    <div class="editor-sidebar">
+                        <h3 class="sidebar-title">Book Tools</h3>
+                        <div class="tool-group">
+                            <h4>Templates</h4>
+                            <select style="width: 100%; padding: 0.5rem; margin: 0.5rem 0;">
+                                <option>Novel Template</option>
+                                <option>Short Story Template</option>
+                                <option>Poetry Template</option>
+                                <option>Notebook Template</option>
+                                <option>Journal Template</option>
+                            </select>
+                        </div>
+                        
+                        <div class="tool-group" style="margin-top: 1.5rem;">
+                            <h4>Word Count</h4>
+                            <p>Words: <span id="word-count">324</span> | Characters: <span id="char-count">1857</span></p>
+                        </div>
+                        
+                        <div class="tool-group" style="margin-top: 1.5rem;">
+                            <h4>Formatting Options</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">B</button>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">I</button>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">U</button>
+                                <button class="btn" style="padding: 0.3rem 0.8rem; font-size: 0.9rem;">Aa</button>
+                            </div>
+                        </div>
+                        
+                        <div class="tool-group" style="margin-top: 1.5rem;">
+                            <h4>Export Options</h4>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                                <button class="btn btn-outline" style="text-align: left;">Export as PDF</button>
+                                <button class="btn btn-outline" style="text-align: left;">Export as EPUB</button>
+                                <button class="btn btn-outline" style="text-align: left;">Export as DOCX</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section" style="background-color: #f8fafc;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple Pricing</h2>
+                <p>Choose the plan that fits your publishing needs</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Starter</h3>
+                        <div class="pricing-price">$19<span>/month</span></div>
+                        <p>Perfect for beginners</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>3 Book Projects</li>
+                        <li>Basic Templates</li>
+                        <li>PDF Export</li>
+                        <li>Email Support</li>
+                        <li>Limited Research Tools</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%; margin-top: 1.5rem;">Get Started</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-badge">POPULAR</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Writer</h3>
+                        <div class="pricing-price">$39<span>/month</span></div>
+                        <p>For active authors</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Unlimited Projects</li>
+                        <li>Premium Templates</li>
+                        <li>PDF, EPUB, DOCX Export</li>
+                        <li>Priority Support</li>
+                        <li>Advanced Research Tools</li>
+                        <li>Amazon KDP Integration</li>
+                        <li>Idea Generation Tools</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Get Started</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Publisher</h3>
+                        <div class="pricing-price">$69<span>/month</span></div>
+                        <p>For professional publishers</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>Everything in Writer</li>
+                        <li>Team Collaboration</li>
+                        <li>Analytics Dashboard</li>
+                        <li>Custom Branding</li>
+                        <li>API Access</li>
+                        <li>Marketing Tools</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <button class="btn btn-outline" style="width: 100%; margin-top: 1.5rem;">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>BookBolt</h3>
+                    <p style="color: #adb5bd; margin-bottom: 1rem;">The all-in-one platform for authors to create, publish, and sell books.</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="color: #adb5bd;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" style="color: #adb5bd;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: #adb5bd;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: #adb5bd;"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Templates</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                        <li><a href="#">Roadmap</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 BookBolt. All rights reserved. This is a demo clone for educational purposes.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Update word and character count
+        const editor = document.getElementById('editor');
+        const wordCountElement = document.getElementById('word-count');
+        const charCountElement = document.getElementById('char-count');
+        
+        function updateCounts() {
+            const text = editor.value;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const characters = text.length;
+            
+            wordCountElement.textContent = words;
+            charCountElement.textContent = characters;
+        }
+        
+        editor.addEventListener('input', updateCounts);
+        updateCounts(); // Initialize counts
+        
+        // Add formatting functionality
+        document.querySelector('.btn[style*="padding: 0.3rem 0.8rem; font-size: 0.9rem;"]:nth-child(1)').addEventListener('click', () => {
+            document.execCommand('bold', false, null);
+        });
+        
+        document.querySelector('.btn[style*="padding: 0.3rem 0.8rem; font-size: 0.9rem;"]:nth-child(2)').addEventListener('click', () => {
+            document.execCommand('italic', false, null);
+        });
+        
+        document.querySelector('.btn[style*="padding: 0.3rem 0.8rem; font-size: 0.9rem;"]:nth-child(3)').addEventListener('click', () => {
+            document.execCommand('underline', false, null);
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Simple modal for getting started button
+        document.querySelector('.btn-primary.btn-lg').addEventListener('click', () => {
+            alert('Thank you for your interest! To get started with BookBolt, sign up for a free account to access our writing tools and templates.');
+        });
+    </script>
+</body>
+</html>

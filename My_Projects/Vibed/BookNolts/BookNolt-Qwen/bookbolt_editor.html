@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookBolt Editor - Advanced Writing Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4ade80;
+            --warning: #facc15;
+            --danger: #f87171;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --sidebar-width: 280px;
+            --header-height: 60px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Editor Layout */
+        .editor-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            height: calc(100vh - var(--header-height));
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 30px;
+        }
+        
+        .logo i {
+            color: var(--accent);
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            margin-right: auto;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .word-count {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .templates-list {
+            list-style: none;
+        }
+        
+        .templates-list li {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .templates-list li:hover {
+            background: var(--light-gray);
+        }
+        
+        .templates-list li.active {
+            background: rgba(67, 97, 238, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .project-list {
+            list-style: none;
+        }
+        
+        .project-list li {
+            padding: 12px 10px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+        
+        .project-list li:hover {
+            background: var(--light-gray);
+        }
+        
+        .project-list li.active {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .project-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+        
+        /* Main Editor */
+        .editor-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .editor-header {
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+        }
+        
+        .editor-title {
+            flex: 1;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .editor-title:focus {
+            outline: 2px solid var(--primary);
+            background: var(--light);
+        }
+        
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            padding: 0 10px;
+            border-bottom: 1px solid var(--light-gray);
+            background: white;
+        }
+        
+        .toolbar-group {
+            display: flex;
+            border-right: 1px solid var(--light-gray);
+            padding-right: 15px;
+            margin-right: 15px;
+        }
+        
+        .toolbar-group:last-child {
+            border-right: none;
+            margin-right: 0;
+            padding-right: 0;
+        }
+        
+        .toolbar-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            transition: all 0.2s;
+        }
+        
+        .toolbar-btn:hover {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+        
+        .toolbar-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .editor-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #fefefe;
+        }
+        
+        #editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--dark);
+            background: transparent;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            padding: 8px 20px;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Responsive */
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                position: absolute;
+                left: -100%;
+                top: var(--header-height);
+                height: calc(100vh - var(--header-height));
+                z-index: 90;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <button class="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo">
+            <i class="fas fa-book-open"></i>
+            <span>BookBolt Editor</span>
+        </div>
+        <div class="header-controls">
+            <button class="btn btn-outline">
+                <i class="fas fa-file"></i> New
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-folder-open"></i> Open
+            </button>
+            <button class="btn btn-primary">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+        <div class="header-info">
+            <div class="word-count">
+                <i class="fas fa-font"></i> <span id="word-count">0</span> words
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user-circle fa-lg"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Editor Layout -->
+    <div class="editor-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">BookBolt Editor</h2>
+                <button class="btn btn-outline">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-book"></i> Your Projects</h3>
+                    <ul class="project-list">
+                        <li class="active">
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>My Novel - Chapter 1</div>
+                        </li>
+                        <li>
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>Short Story Collection</div>
+                        </li>
+                        <li>
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>Poetry Book</div>
+                        </li>
+                        <li>
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div>Journal Entries</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-clipboard-list"></i> Templates</h3>
+                    <ul class="templates-list">
+                        <li class="active">Novel Template</li>
+                        <li>Short Story Template</li>
+                        <li>Poetry Template</li>
+                        <li>Notebook Template</li>
+                        <li>Journal Template</li>
+                        <li>Screenplay Template</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-chart-line"></i> Statistics</h3>
+                    <div style="background: var(--light); padding: 15px; border-radius: 8px;">
+                        <div style="margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Words Today</span>
+                                <span>342</span>
+                            </div>
+                            <div style="height: 6px; background: var(--light-gray); border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; width: 65%; background: var(--primary);"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span>Current Streak</span>
+                                <span>7 days</span>
+                            </div>
+                            <div style="height: 6px; background: var(--light-gray); border-radius: 3px; overflow: hidden;">
+                                <div style="height: 100%; width: 85%; background: var(--success);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-magic"></i> Writing Assistant</h3>
+                    <button class="btn btn-outline" style="width: 100%; margin-bottom: 10px;">
+                        <i class="fas fa-lightbulb"></i> Get Ideas
+                    </button>
+                    <button class="btn btn-outline" style="width: 100%;">
+                        <i class="fas fa-spell-check"></i> Improve Writing
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Editor Area -->
+        <div class="editor-main">
+            <div class="editor-header">
+                <input type="text" class="editor-title" value="Chapter 1: The Beginning" placeholder="Enter title...">
+                <div>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+            
+            <div class="editor-toolbar">
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Bold" data-command="bold">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Italic" data-command="italic">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Underline" data-command="underline">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Align Left">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Align Center">
+                        <i class="fas fa-align-center"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Align Right">
+                        <i class="fas fa-align-right"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Bullet List">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Numbered List">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Insert Image">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Insert Link">
+                        <i class="fas fa-link"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <select style="border: none; background: transparent; color: var(--gray);">
+                        <option>Normal</option>
+                        <option>Heading 1</option>
+                        <option>Heading 2</option>
+                        <option>Heading 3</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="editor-content">
+                <textarea id="editor" placeholder="Start writing your book here...">In a land far away, where the mountains touch the sky and the rivers flow with ancient wisdom, there lived a young adventurer named Elara. She had always dreamed of exploring the forbidden forest that bordered her village, but the elders warned that dangerous creatures dwelt within its shadowy depths.
+
+On the morning of her twentieth birthday, Elara could contain her curiosity no longer. She packed a small satchel with provisions and set out at dawn, her heart pounding with excitement and fear in equal measure. The forest loomed before her, its twisted branches forming a natural archway that seemed to beckon her forward.
+
+As she stepped across the threshold, the world behind her faded from view. The air grew cooler and the light dimmer, filtered through a canopy so thick that only dappled sunlight reached the forest floor. Strange sounds echoed around her - the hoot of unfamiliar owls, the rustle of leaves, and something that might have been whispers on the wind.
+
+Elara pressed forward, her courage fortified by her lifelong desire to explore. She had no way of knowing that her journey would lead to discoveries that would change not only her life, but the fate of her entire world.
+
+Further along the path, she encountered a clearing where ancient ruins stood half-buried beneath moss and vines. At the center of the clearing, a stone pedestal held a glowing crystal that pulsed with a rhythm like a heartbeat. As she approached, the crystal's light intensified, and she felt a strange energy emanating from it.
+
+"What is this place?" she whispered to herself, not expecting an answer. But the forest seemed to respond, as if acknowledging her presence for the first time.
+
+This was just the beginning of what would become the greatest adventure of her life...</textarea>
+            </div>
+            
+            <div class="status-bar">
+                <div class="status-item">
+                    <i class="fas fa-keyboard"></i> <span>BookBolt Editor</span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-font"></i> <span id="status-word-count">324</span> words
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-sync-alt"></i> Saved
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Editor functionality
+        const editor = document.getElementById('editor');
+        const wordCountElement = document.getElementById('word-count');
+        const statusWordCountElement = document.getElementById('status-word-count');
+        
+        // Update word count
+        function updateWordCount() {
+            const text = editor.value;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            
+            wordCountElement.textContent = words;
+            statusWordCountElement.textContent = words;
+        }
+        
+        editor.addEventListener('input', updateWordCount);
+        updateWordCount(); // Initialize count
+        
+        // Formatting buttons functionality
+        const formatButtons = document.querySelectorAll('.toolbar-btn[data-command]');
+        formatButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const command = button.getAttribute('data-command');
+                document.execCommand(command, false, null);
+                editor.focus();
+            });
+        });
+        
+        // Make editor content editable
+        editor.addEventListener('keydown', (e) => {
+            // Handle common formatting shortcuts
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'b':
+                        e.preventDefault();
+                        document.execCommand('bold', false, null);
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        document.execCommand('italic', false, null);
+                        break;
+                    case 'u':
+                        e.preventDefault();
+                        document.execCommand('underline', false, null);
+                        break;
+                }
+            }
+        });
+        
+        // Template selection
+        const templateItems = document.querySelectorAll('.templates-list li');
+        templateItems.forEach(item => {
+            item.addEventListener('click', () => {
+                templateItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        // Project selection
+        const projectItems = document.querySelectorAll('.project-list li');
+        projectItems.forEach(item => {
+            item.addEventListener('click', () => {
+                projectItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        // Save button functionality
+        const saveButton = document.querySelector('.btn-primary');
+        saveButton.addEventListener('click', () => {
+            // In a real app, this would save to a backend
+            const status = document.querySelector('.status-bar .status-item:last-child');
+            status.innerHTML = '<i class="fas fa-check"></i> Saved';
+            
+            // Reset status after 2 seconds
+            setTimeout(() => {
+                status.innerHTML = '<i class="fas fa-sync-alt"></i> Saved';
+            }, 2000);
+        });
+        
+        // Responsive sidebar toggle
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+        }
+        
+        // Auto-resize textarea based on content
+        function autoResize() {
+            editor.style.height = 'auto';
+            editor.style.height = editor.scrollHeight + 'px';
+        }
+        
+        editor.addEventListener('input', autoResize);
+        autoResize(); // Initialize height
+    </script>
+</body>
+</html>

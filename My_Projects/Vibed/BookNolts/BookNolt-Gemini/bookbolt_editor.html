@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookBolt Editor - Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --bg-color: #f3f4f6;
+            --sidebar-bg: #ffffff;
+            --canvas-bg: #e5e7eb;
+            --text-color: #1f2937;
+            --border-color: #d1d5db;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .sidebar {
+            width: 350px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .sidebar-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .main-content {
+            flex-grow: 1;
+            overflow: auto;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .accordion-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .accordion-button {
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: left;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-button:hover {
+            background-color: #f9fafb;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: #f9fafb;
+            padding: 0 15px;
+        }
+        .accordion-content-inner {
+            padding: 15px 0;
+        }
+        .control-group { margin-bottom: 15px; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        button:hover { background-color: #4338ca; }
+        .canvas-container {
+            background-color: var(--sidebar-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        #cover-canvas { 
+            border: 1px dashed #9ca3af; 
+            cursor: default;
+        }
+        .info-box {
+            background-color: #eef2ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">BookNolt Gemini</div>
+        <div class="sidebar-content">
+            <div class="accordion">
+                <!-- Accordion Item 1: Dimensions -->
+                <div class="accordion-item">
+                    <button class="accordion-button">Book Dimensions <span class="icon">+</span></button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <div class="control-group">
+                                <label for="trimSize">Trim Size (Width x Height)</label>
+                                <select id="trimSize">
+                                    <option value="6,9">6" x 9"</option>
+                                    <option value="8.5,11">8.5" x 11"</option>
+                                    <option value="5,8">5" x 8"</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label for="pageCount">Page Count</label>
+                                <input type="number" id="pageCount" value="120">
+                            </div>
+                            <div class="control-group">
+                                <label for="paperType">Paper Type</label>
+                                <select id="paperType">
+                                    <option value="white">White Paper (0.002252")</option>
+                                    <option value="cream">Cream Paper (0.0025")</option>
+                                </select>
+                            </div>
+                            <div id="spine-info" class="info-box">Spine Width: 0.27"</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Accordion Item 2: Cover -->
+                <div class="accordion-item">
+                    <button class="accordion-button">Cover <span class="icon">+</span></button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                           <div class="control-group">
+                                <label for="coverBgColor">Background Color</label>
+                                <input type="color" id="coverBgColor" value="#ffffff">
+                            </div>
+                             <div class="control-group">
+                                <label for="imageUpload">Upload Image</label>
+                                <input type="file" id="imageUpload" accept="image/*" style="padding: 5px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Accordion Item 3: Interior -->
+                <div class="accordion-item">
+                    <button class="accordion-button">Interior <span class="icon">+</span></button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                             <div class="control-group">
+                                <label for="interiorTemplate">Select Template</label>
+                                <select id="interiorTemplate">
+                                    <option value="lined">Lined Journal</option>
+                                    <option value="dotted">Dotted Grid</option>
+                                    <option value="planner">Weekly Planner</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Accordion Item 4: Export -->
+                <div class="accordion-item">
+                    <button class="accordion-button">Export <span class="icon">+</span></button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <div class="control-group">
+                                <button id="exportCover">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                                    Export Cover PDF
+                                </button>
+                            </div>
+                            <div class="control-group">
+                                <button id="exportInterior">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+                                    Export Interior PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="canvas-container">
+            <canvas id="cover-canvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // --- UI Elements ---
+        const trimSizeEl = document.getElementById('trimSize');
+        const pageCountEl = document.getElementById('pageCount');
+        const paperTypeEl = document.getElementById('paperType');
+        const spineInfoEl = document.getElementById('spine-info');
+        const coverBgColorEl = document.getElementById('coverBgColor');
+        const imageUploadEl = document.getElementById('imageUpload');
+        const interiorTemplateEl = document.getElementById('interiorTemplate');
+        const canvas = document.getElementById('cover-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // --- KDP Constants ---
+        const BLEED = 0.125;
+        const MARGIN = 0.25;
+        const DPI = 300;
+
+        // --- Canvas Interaction State ---
+        let canvasObjects = [];
+        let selectedObject = null;
+        let isDragging = false;
+        let isResizing = false;
+        let resizeHandle = null;
+        let dragStartX, dragStartY;
+
+        // --- Core Logic ---
+        function getBookDimensions() {
+            const [trimWidth, trimHeight] = trimSizeEl.value.split(',').map(Number);
+            const pageCount = Number(pageCountEl.value);
+            const paperFactor = paperTypeEl.value === 'white' ? 0.002252 : 0.0025;
+            const spineWidth = pageCount * paperFactor;
+            const coverWidth = (trimWidth * 2) + spineWidth + (BLEED * 2);
+            const coverHeight = trimHeight + (BLEED * 2);
+            return { trimWidth, trimHeight, pageCount, spineWidth, coverWidth, coverHeight };
+        }
+
+        function updateSpineInfo() {
+            const { spineWidth } = getBookDimensions();
+            spineInfoEl.textContent = `Spine Width: ${spineWidth.toFixed(4)}"`;
+        }
+
+        function drawAll() {
+            const dims = getBookDimensions();
+            const viewScale = 80;
+            canvas.width = dims.coverWidth * DPI;
+            canvas.height = dims.coverHeight * DPI;
+            canvas.style.width = `${dims.coverWidth * viewScale}px`;
+            canvas.style.height = `${dims.coverHeight * viewScale}px`;
+
+            ctx.save();
+            ctx.scale(DPI, DPI);
+
+            // 1. Background
+            ctx.fillStyle = coverBgColorEl.value;
+            ctx.fillRect(0, 0, dims.coverWidth, dims.coverHeight);
+            
+            // 2. Draw all objects (images, text, etc.)
+            canvasObjects.forEach(obj => {
+                if (obj.type === 'image') {
+                    ctx.drawImage(obj.image, obj.x, obj.y, obj.width, obj.height);
+                }
+            });
+
+            // 3. Draw guides and selection handles on top
+            drawGuides(dims);
+            if (selectedObject) {
+                drawSelectionHandles(selectedObject);
+            }
+            ctx.restore();
+        }
+
+        function drawGuides(dims) {
+            ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
+            ctx.lineWidth = 1 / DPI;
+            ctx.setLineDash([5 / DPI, 5 / DPI]);
+
+            // Bleed area
+            ctx.strokeRect(BLEED, BLEED, dims.coverWidth - 2 * BLEED, dims.coverHeight - 2 * BLEED);
+            
+            // Spine lines
+            const spineX = BLEED + dims.trimWidth;
+            ctx.beginPath();
+            ctx.moveTo(spineX, 0); ctx.lineTo(spineX, dims.coverHeight);
+            ctx.moveTo(spineX + dims.spineWidth, 0); ctx.lineTo(spineX + dims.spineWidth, dims.coverHeight);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawSelectionHandles(obj) {
+            ctx.strokeStyle = var(--primary-color);
+            ctx.lineWidth = 2 / DPI;
+            ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
+
+            const handleSize = 8 / DPI;
+            ctx.fillStyle = var(--primary-color);
+            // corners
+            ctx.fillRect(obj.x - handleSize/2, obj.y - handleSize/2, handleSize, handleSize);
+            ctx.fillRect(obj.x + obj.width - handleSize/2, obj.y - handleSize/2, handleSize, handleSize);
+            ctx.fillRect(obj.x - handleSize/2, obj.y + obj.height - handleSize/2, handleSize, handleSize);
+            ctx.fillRect(obj.x + obj.width - handleSize/2, obj.y + obj.height - handleSize/2, handleSize, handleSize);
+        }
+
+        // --- Event Handlers ---
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const { trimWidth, trimHeight, bleed } = getBookDimensions();
+                    const newImageObject = {
+                        type: 'image',
+                        image: img,
+                        x: BLEED + trimWidth * 1.2, // Default to front cover
+                        y: BLEED,
+                        width: trimWidth / 2,
+                        height: (img.height / img.width) * (trimWidth / 2)
+                    };
+                    canvasObjects.push(newImageObject);
+                    selectedObject = newImageObject;
+                    drawAll();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // --- Accordion ---
+        document.querySelectorAll('.accordion-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const icon = button.querySelector('.icon');
+                
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    icon.textContent = '+';
+                } else {
+                    document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+                    document.querySelectorAll('.accordion-button .icon').forEach(i => i.textContent = '+');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.textContent = '-';
+                }
+            });
+        });
+
+        // --- Canvas Mouse Events ---
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width / DPI;
+            const scaleY = canvas.height / rect.height / DPI;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+
+            selectedObject = null; // Deselect first
+            for (let i = canvasObjects.length - 1; i >= 0; i--) {
+                const obj = canvasObjects[i];
+                if (mouseX >= obj.x && mouseX <= obj.x + obj.width && mouseY >= obj.y && mouseY <= obj.y + obj.height) {
+                    selectedObject = obj;
+                    isDragging = true;
+                    dragStartX = mouseX - obj.x;
+                    dragStartY = mouseY - obj.y;
+                    break;
+                }
+            }
+            drawAll();
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDragging || !selectedObject) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width / DPI;
+            const scaleY = canvas.height / rect.height / DPI;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+
+            selectedObject.x = mouseX - dragStartX;
+            selectedObject.y = mouseY - dragStartY;
+            drawAll();
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        // --- Init & Global Listeners ---
+        [trimSizeEl, pageCountEl, paperTypeEl, coverBgColorEl].forEach(el => {
+            el.addEventListener('change', () => {
+                updateSpineInfo();
+                drawAll();
+            });
+        });
+        imageUploadEl.addEventListener('change', handleImageUpload);
+        // Add export listeners later
+
+        updateSpineInfo();
+        drawAll();
+        // Open the first accordion by default
+        document.querySelector('.accordion-button').click();
+
+    </script>
+</body>
+</html>

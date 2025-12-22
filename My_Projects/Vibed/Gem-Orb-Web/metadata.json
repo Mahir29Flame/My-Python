@@ -1,0 +1,8 @@
+{
+  "name": "Gem-Orb",
+  "description": "Speak, and the orb responds. An interactive experience powered by the Live Audio API. This is a fork of 'Audio Orb' from google asi studio's app gallery.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "prompt": ""
+}

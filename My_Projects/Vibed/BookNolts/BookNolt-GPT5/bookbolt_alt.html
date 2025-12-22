@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Book Creation Toolkit (Alt)</title>
+<style>
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#f6f7f9; color:#1d1f21; }
+    header { background:#23272f; color:#fff; padding:16px 24px; display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+    header h1 { margin:0; font-size:20px; }
+    main { max-width:1300px; margin:0 auto; padding:20px; display:grid; gap:20px; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
+    section { background:#fff; border-radius:10px; padding:16px 18px; box-shadow:0 4px 12px rgba(0,0,0,.06); display:flex; flex-direction:column; }
+    h2 { margin:4px 0 12px; font-size:18px; }
+    label { font-size:12px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; display:block; margin:12px 0 4px; }
+    input[type=text],input[type=number],input[type=color],textarea,select { width:100%; padding:8px 10px; border:1px solid #c9ced3; border-radius:6px; font:inherit; background:#fafbfc; }
+    textarea { resize:vertical; min-height:90px; }
+    button { cursor:pointer; border:none; border-radius:6px; background:#2563eb; color:#fff; font-weight:600; padding:10px 14px; margin-top:14px; box-shadow:0 2px 4px rgba(0,0,0,.15); transition:.15s; }
+    button:hover { background:#1d4ed8; }
+    .row { display:flex; gap:10px; }
+    .row > * { flex:1; }
+    canvas { width:100%; height:auto; border:1px solid #d0d4d8; border-radius:6px; background:#fff; }
+    small.muted { color:#666; display:block; margin-top:4px; }
+    ul.keyword-list { list-style:none; padding:0; margin:10px 0 0; max-height:160px; overflow:auto; border:1px solid #e3e6e9; border-radius:6px; }
+    ul.keyword-list li { padding:6px 10px; border-bottom:1px solid #f0f2f4; font-size:13px; display:flex; justify-content:space-between; }
+    ul.keyword-list li span { font-weight:600; color:#111; }
+    .badge { background:#eef2ff; color:#1e3a8a; padding:2px 6px; border-radius:4px; font-size:11px; }
+    footer { text-align:center; padding:30px 0 50px; font-size:12px; color:#64748b; }
+    .flex { display:flex; gap:8px; flex-wrap:wrap; }
+    .flex.center { justify-content:center; }
+.layer-list { list-style:none; margin:4px 0 0; padding:0; max-height:140px; overflow:auto; border:1px solid #d1d5db; border-radius:6px; background:#fff; }
+.layer-list .layer-item { padding:4px 8px; font-size:12px; cursor:pointer; border-bottom:1px solid #f1f5f9; }
+.layer-list .layer-item.active { background:#2563eb; color:#fff; }
+body.dark { background:#111827; color:#f1f5f9; }
+body.dark header { background:#1f2937; }
+body.dark section { background:#1e293b; box-shadow:0 4px 12px rgba(0,0,0,.5); }
+body.dark input, body.dark select, body.dark textarea { background:#0f172a; color:#f1f5f9; border-color:#334155; }
+body.dark button { background:#3b82f6; }
+body.dark button:hover { background:#2563eb; }
+body.dark .layer-list { background:#1e293b; border-color:#334155; }
+body.dark .layer-list .layer-item { border-color:#1e293b; }
+body.dark .layer-list .layer-item.active { background:#3b82f6; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Book Creation Toolkit (Alt)</h1>
+  <div style="font-size:12px; opacity:.8;" aria-label="App purpose">Lightweight demo: cover, interior & keyword analyzer</div>
+  <button id="toggleTheme" type="button" aria-label="Toggle dark mode" style="margin-left:auto;background:#374151;">Dark</button>
+</header>
+<main>
+  <!-- Cover Designer -->
+  <section>
+    <h2>Focused Cover Editor</h2>
+    <canvas id="cover" width="800" height="1200" style="max-width:800px;margin:0 auto;display:block;"></canvas>
+    <details class="cover-options" style="margin-top:16px;">
+      <summary style="cursor:pointer;font-weight:600;">Export & Options</summary>
+      <div style="margin-top:12px;">
+        <div class="row">
+          <div>
+            <label>Title</label>
+            <input type="text" id="title" placeholder="My Awesome Book" />
+          </div>
+          <div>
+            <label>Font Size</label>
+            <input type="number" id="titleSize" value="72" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Title Color</label>
+            <input type="color" id="titleColor" value="#111111" />
+          </div>
+          <div>
+            <label>Background</label>
+            <input type="color" id="bgColor" value="#ffffff" />
+          </div>
+        </div>
+        <label>Subtitle</label>
+        <input type="text" id="subtitle" placeholder="Optional subtitle" />
+        <div class="row">
+          <div>
+            <label>Subtitle Size</label>
+            <input type="number" id="subtitleSize" value="32" />
+          </div>
+          <div>
+            <label>Subtitle Color</label>
+            <input type="color" id="subtitleColor" value="#444444" />
+          </div>
+        </div>
+        <button id="downloadCover">Download PNG</button>
+        <div class="advanced-controls" style="margin-top:16px; border-top:1px solid #e3e6e9; padding-top:12px;">
+          <h3 style="margin:0 0 8px;font-size:14px;">Advanced Features</h3>
+          <div class="row">
+            <div>
+              <label>New Text Layer</label>
+              <input type="text" id="advNewText" placeholder="Layer text">
+            </div>
+            <div>
+              <label>Font</label>
+              <select id="advFont">
+                <option>Impact</option>
+                <option>Arial</option>
+                <option>Georgia</option>
+                <option>Courier New</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Text Color</label>
+              <input type="color" id="advTextColor" value="#111111">
+            </div>
+            <div>
+              <label>Shadow</label>
+              <select id="advShadow"><option value="none">None</option><option value="soft">Soft</option><option value="strong">Strong</option></select>
+            </div>
+          </div>
+          <div class="row">
+            <div><label>Upload Image</label><input type="file" id="advImage" accept="image/*"></div>
+            <div><label>Selected Opacity (%)</label><input type="number" id="advOpacity" value="100" min="1" max="100"></div>
+          </div>
+          <div class="row">
+            <button id="advAddText">Add Text</button>
+            <button id="advDeleteLayer" style="background:#dc3545;">Delete Selected</button>
+          </div>
+          <div class="row">
+            <button id="advUndo" style="background:#6b7280;">Undo</button>
+            <button id="advRedo" style="background:#6b7280;">Redo</button>
+            <button id="advToggleGrid" style="background:#374151;">Grid</button>
+            <button id="advToggleBleed" style="background:#374151;">Bleed</button>
+          </div>
+          <div class="layer-list-wrapper">
+  <label style="margin-top:8px">Layers</label>
+  <ul id="layerList" class="layer-list"></ul>
+</div>
+<div class="row">
+  <button id="moveLayerUp" style="background:#4b5563;">Move Up</button>
+  <button id="moveLayerDown" style="background:#4b5563;">Move Down</button>
+  <button id="duplicateLayer" style="background:#4b5563;">Duplicate</button>
+</div>
+<div class="row">
+  <button id="downloadJPEG" style="background:#0d9488;">JPEG</button>
+  <button id="downloadTransparent" style="background:#0d9488;">PNG Transparent</button>
+</div>
+<small class="muted">Drag layers. Wheel=scale. Shift+wheel=rotate. PNG/JPEG export includes layers.</small>
+        </div>
+        <small class="muted">Larger canvas (800x1200). Adjust bleed & final trim externally.</small>
+      </div>
+    </details>
+  </section>
+
+  <!-- Interior Generator -->
+  <section>
+    <h2>Interior PDF Generator</h2>
+    <div class="row">
+      <div>
+        <label>Pages</label>
+        <input type="number" id="pages" value="100" />
+      </div>
+      <div>
+        <label>Trim Size (WxH in)</label>
+        <input type="text" id="trim" value="6x9" />
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Template</label>
+        <select id="template">
+          <option value="lined">Lined</option>
+          <option value="dot">Dot Grid</option>
+          <option value="planner">Planner</option>
+        </select>
+      </div>
+      <div>
+        <label>Color</label>
+        <input type="color" id="lineColor" value="#c9c9c9" />
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Spacing (in)</label>
+        <input type="number" step="0.01" id="spacing" value="0.28" />
+      </div>
+      <div>
+        <label>Dot Spacing (in)</label>
+        <input type="number" step="0.05" id="dotSpacing" value="0.25" />
+      </div>
+    </div>
+    <label>Planner Rows</label>
+    <input type="number" id="plannerRows" value="6" />
+    <button id="generatePdf">Generate PDF</button>
+    <small class="muted">Simplified generator. Validate KDP specifications (bleed/margins/fonts) separately.</small>
+  </section>
+
+  <!-- Keyword Analyzer -->
+  <section>
+    <h2>Keyword Analyzer</h2>
+    <label>Enter Keywords / Phrases (one per line)</label>
+    <textarea id="keywords" placeholder="gratitude journal\nfitness log\nmeal planner\ndaily affirmation"></textarea>
+    <label>Extra Text (description / niche notes)</label>
+    <textarea id="extraText" placeholder="Enter description or notes to enrich frequency analysis"></textarea>
+    <div class="row">
+      <div>
+        <label>Top N</label>
+        <input type="number" id="topN" value="15" />
+      </div>
+      <div>
+        <label>Min Length</label>
+        <input type="number" id="minLen" value="4" />
+      </div>
+    </div>
+    <button id="analyzeBtn">Analyze</button>
+    <ul class="keyword-list" id="results"></ul>
+    <small class="muted">Basic text frequency tool (no external data). Helps prioritize interior/theme ideas.</small>
+  </section>
+
+  <!-- Simple Idea Combiner -->
+  <section>
+    <h2>Idea Combiner</h2>
+    <label>Primary Themes (comma separated)</label>
+    <input type="text" id="themes" value="gratitude, mindfulness, productivity" />
+    <label>Audience Modifiers (comma separated)</label>
+    <input type="text" id="audience" value="kids, teens, adults" />
+    <label>Style Modifiers (comma separated)</label>
+    <input type="text" id="styles" value="minimalist, colorful, vintage" />
+    <button id="combineBtn">Generate Combinations</button>
+    <ul class="keyword-list" id="comboList"></ul>
+    <small class="muted">Generates niche combination prompts for further research.</small>
+  </section>
+</main>
+<footer>
+  Demo only – Not affiliated with BookBolt. Enhance & validate before publishing.
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// COVER DESIGNER
+const cover = document.getElementById('cover'); // enlarged editor canvas
+const ctx = cover.getContext('2d');
+const title = document.getElementById('title');
+const titleSize = document.getElementById('titleSize');
+const titleColor = document.getElementById('titleColor');
+const bgColor = document.getElementById('bgColor');
+const subtitle = document.getElementById('subtitle');
+const subtitleSize = document.getElementById('subtitleSize');
+const subtitleColor = document.getElementById('subtitleColor');
+function drawCover(){
+  ctx.fillStyle = bgColor.value; ctx.fillRect(0,0,cover.width,cover.height);
+  ctx.textAlign='center'; ctx.fillStyle=titleColor.value; ctx.font=titleSize.value+'px Impact, Arial';
+  wrapText(title.value || '', cover.width/2, cover.height/2 - 40, cover.width-120, parseInt(titleSize.value)*0.9);
+  ctx.fillStyle=subtitleColor.value; ctx.font=subtitleSize.value+'px Arial';
+  wrapText(subtitle.value || '', cover.width/2, cover.height/2 + 80, cover.width-160, parseInt(subtitleSize.value)*1);
+}
+function wrapText(text,x,y,maxWidth,lineHeight){
+  if(!text) return; const words=text.split(/\s+/); let line=''; let yy=y; for(let w of words){ let test=line? line+' '+w : w; if(ctx.measureText(test).width>maxWidth){ ctx.fillText(line,x,yy); line=w; yy+=lineHeight; } else line=test; } ctx.fillText(line,x,yy); }
+['input','change','keyup'].forEach(evt=>{ [title,titleSize,titleColor,bgColor,subtitle,subtitleSize,subtitleColor].forEach(el=> el.addEventListener(evt,drawCover));});
+drawCover();
+// download
+document.getElementById('downloadCover').onclick=()=>{ const a=document.createElement('a'); a.download='cover.png'; a.href=cover.toDataURL('image/png'); a.click(); };
+
+// INTERIOR GENERATOR
+const pagesEl=document.getElementById('pages');
+const trimEl=document.getElementById('trim');
+const templateEl=document.getElementById('template');
+const lineColorEl=document.getElementById('lineColor');
+const spacingEl=document.getElementById('spacing');
+const dotSpacingEl=document.getElementById('dotSpacing');
+const plannerRowsEl=document.getElementById('plannerRows');
+const genBtn=document.getElementById('generatePdf');
+
+function generateInterior(){
+  const { jsPDF } = window.jspdf;
+  let pages=parseInt(pagesEl.value)||1; let [w,h]=trimEl.value.toLowerCase().split('x').map(v=>parseFloat(v)||6); const doc=new jsPDF({orientation:'portrait',unit:'in',format:[w,h]});
+  const margin=0.5; const type=templateEl.value; const lineColor=lineColorEl.value; doc.setDrawColor(lineColor); const spacing=parseFloat(spacingEl.value)||0.28; doc.setLineWidth(0.01);
+  for(let p=0; p<pages; p++){ if(p>0) doc.addPage(); if(type==='lined'){ let y=margin; const end=h-margin; while(y<end){ doc.line(margin,y,w-margin,y); y+=spacing; } } else if(type==='dot'){ const ds=parseFloat(dotSpacingEl.value)||0.25; const r=0.015; for(let y=margin; y<=h-margin; y+=ds){ for(let x=margin; x<=w-margin; x+=ds){ doc.circle(x,y,r,'F'); } } } else if(type==='planner'){ const rows=parseInt(plannerRowsEl.value)||6; const header=0.7; doc.rect(margin,margin,w-2*margin,header); doc.text('Date:',margin+0.2,margin+0.4); const avail=h-margin-(margin+header)-0.1; const rh=avail/rows; let y=margin+header+0.1; for(let r=0;r<rows;r++){ doc.rect(margin,y,w-2*margin,rh); y+=rh; } } }
+  doc.save('interior-'+type+'.pdf');
+}
+
+genBtn.onclick=generateInterior;
+
+// KEYWORD ANALYZER
+const keywordsEl=document.getElementById('keywords');
+const extraTextEl=document.getElementById('extraText');
+const topNEl=document.getElementById('topN');
+const minLenEl=document.getElementById('minLen');
+const analyzeBtn=document.getElementById('analyzeBtn');
+const resultsEl=document.getElementById('results');
+
+function analyze(){
+  resultsEl.innerHTML=''; const base=(keywordsEl.value+'\n'+extraTextEl.value).toLowerCase(); const tokens=base.match(/[a-zA-Z][a-zA-Z0-9\-']+/g)||[]; const freq={}; const minLen=parseInt(minLenEl.value)||1; tokens.forEach(t=>{ if(t.length>=minLen){ freq[t]=(freq[t]||0)+1; } }); const arr=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,parseInt(topNEl.value)||15); arr.forEach(([word,count])=>{ const li=document.createElement('li'); li.innerHTML='<span>'+word+'</span><span class="badge">'+count+'</span>'; resultsEl.appendChild(li); }); }
+
+analyzeBtn.onclick=analyze;
+
+// IDEA COMBINER
+const themesEl=document.getElementById('themes');
+const audienceEl=document.getElementById('audience');
+const stylesEl=document.getElementById('styles');
+const combineBtn=document.getElementById('combineBtn');
+const comboList=document.getElementById('comboList');
+
+function combine(){ comboList.innerHTML=''; const themes=themesEl.value.split(',').map(s=>s.trim()).filter(Boolean); const audiences=audienceEl.value.split(',').map(s=>s.trim()).filter(Boolean); const styles=stylesEl.value.split(',').map(s=>s.trim()).filter(Boolean); let count=0; for(let t of themes){ for(let a of audiences){ for(let s of styles){ if(count>150) break; const li=document.createElement('li'); li.textContent=`${t} + ${a} + ${s}`; comboList.appendChild(li); count++; } } } }
+
+combineBtn.onclick=combine;
+
+// ===== Advanced Layered Cover Features =====
+const layers=[]; let selectedLayer=null; let showGrid=false; let showBleed=false; const undoStack=[]; const redoStack=[];
+function pushState(){ undoStack.push(JSON.stringify(layers)); if(undoStack.length>60) undoStack.shift(); redoStack.length=0; updateLayerList(); }
+function redrawAll(){ ctx.fillStyle=bgColor.value; ctx.fillRect(0,0,cover.width,cover.height); if(showGrid){ ctx.strokeStyle='#e0e0e0'; ctx.lineWidth=1; for(let x=0;x<cover.width;x+=50){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,cover.height); ctx.stroke(); } for(let y=0;y<cover.height;y+=50){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(cover.width,y); ctx.stroke(); } }
+ if(showBleed){ ctx.strokeStyle='red'; ctx.lineWidth=2; ctx.strokeRect(25,25,cover.width-50,cover.height-50); }
+ layers.forEach(l=>{ ctx.save(); ctx.globalAlpha = (l.opacity??1); ctx.translate(l.x,l.y); ctx.rotate(l.rotation||0); ctx.scale(l.scale||1,l.scale||1); if(l.type==='text'){ if(l.shadow==='soft'){ ctx.shadowColor='rgba(0,0,0,0.3)'; ctx.shadowBlur=10; } else if(l.shadow==='strong'){ ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=20; } ctx.fillStyle=l.color; ctx.font=l.size+'px '+l.font; ctx.textAlign='center'; wrapText(l.text,0,0,l.maxWidth,l.size*0.9); } else if(l.type==='image' && l.img){ ctx.drawImage(l.img,-l.img.width/2,-l.img.height/2); } if(l===selectedLayer){ ctx.shadowColor='rgba(0,0,0,0)'; ctx.shadowBlur=0; ctx.strokeStyle='#2563eb'; ctx.lineWidth=2; let bw=(l.type==='text'? l.maxWidth : (l.img? l.img.width:100))* (l.scale||1); let bh=(l.type==='text'? l.size*1.2 : (l.img? l.img.height:100))* (l.scale||1); ctx.strokeRect(-bw/2,-bh/2,bw,bh); } ctx.restore(); }); updateLayerList(); }
+function initBaseLayers(){ layers.length=0; layers.push({type:'text',text:title.value||'Title',x:cover.width/2,y:cover.height/2-120,size:parseInt(titleSize.value)||72,font:'Impact',color:titleColor.value,maxWidth:cover.width-160,scale:1,rotation:0,shadow:'none',opacity:1}); layers.push({type:'text',text:subtitle.value||'Subtitle',x:cover.width/2,y:cover.height/2+40,size:parseInt(subtitleSize.value)||32,font:'Arial',color:subtitleColor.value,maxWidth:cover.width-240,scale:1,rotation:0,shadow:'none',opacity:1}); pushState(); redrawAll(); }
+initBaseLayers();
+// Override drawCover to layered system
+function drawCover(){ redrawAll(); }
+// Select layer by click
+cover.addEventListener('mousedown',e=>{ const rect=cover.getBoundingClientRect(); const mx=e.clientX-rect.left; const my=e.clientY-rect.top; selectedLayer=null; for(let i=layers.length-1;i>=0;i--){ const l=layers[i]; let w=(l.type==='text'? l.maxWidth : (l.img? l.img.width:0))* (l.scale||1); let h=(l.type==='text'? l.size*1.2 : (l.img? l.img.height:0))* (l.scale||1); let dx=mx-l.x; let dy=my-l.y; if(Math.abs(dx)<=w/2 && Math.abs(dy)<=h/2){ selectedLayer=l; break; } } let startX=mx, startY=my; if(selectedLayer){ const origX=selectedLayer.x, origY=selectedLayer.y; pushState(); function move(ev){ const mxx=ev.clientX-rect.left; const myy=ev.clientY-rect.top; selectedLayer.x=origX+(mxx-startX); selectedLayer.y=origY+(myy-startY); redrawAll(); } function up(){ window.removeEventListener('mousemove',move); window.removeEventListener('mouseup',up); } window.addEventListener('mousemove',move); window.addEventListener('mouseup',up); } redrawAll(); });
+// Wheel scaling / rotation
+cover.addEventListener('wheel',e=>{ if(!selectedLayer) return; e.preventDefault(); if(e.shiftKey){ selectedLayer.rotation = (selectedLayer.rotation||0) + (e.deltaY>0? 0.05 : -0.05); } else { const s=selectedLayer.scale||1; selectedLayer.scale = Math.min(10,Math.max(0.1, s + (e.deltaY>0? -0.05:0.05))); } redrawAll(); });
+// Advanced controls handlers
+const advAddText=document.getElementById('advAddText');
+const advNewText=document.getElementById('advNewText');
+const advFont=document.getElementById('advFont');
+const advTextColor=document.getElementById('advTextColor');
+const advShadow=document.getElementById('advShadow');
+const advImage=document.getElementById('advImage');
+const advOpacity=document.getElementById('advOpacity');
+const advDeleteLayer=document.getElementById('advDeleteLayer');
+const advUndo=document.getElementById('advUndo');
+const advRedo=document.getElementById('advRedo');
+const advToggleGrid=document.getElementById('advToggleGrid');
+const advToggleBleed=document.getElementById('advToggleBleed');
+advAddText.onclick=()=>{ const text=advNewText.value.trim(); if(!text) return; layers.push({type:'text',text, x:cover.width/2, y:cover.height/2, size:48, font:advFont.value, color:advTextColor.value, maxWidth:cover.width-160, scale:1, rotation:0, shadow:advShadow.value, opacity:1}); pushState(); redrawAll(); advNewText.value=''; };
+advShadow.onchange=()=>{ if(selectedLayer && selectedLayer.type==='text'){ selectedLayer.shadow=advShadow.value; redrawAll(); } };
+advFont.onchange=()=>{ if(selectedLayer && selectedLayer.type==='text'){ selectedLayer.font=advFont.value; redrawAll(); } };
+advTextColor.oninput=()=>{ if(selectedLayer && selectedLayer.type==='text'){ selectedLayer.color=advTextColor.value; redrawAll(); } };
+advOpacity.oninput=()=>{ if(selectedLayer){ selectedLayer.opacity = parseInt(advOpacity.value,10)/100; redrawAll(); } };
+advImage.onchange=e=>{ const file=e.target.files[0]; if(!file) return; const img=new Image(); img.onload=()=>{ layers.push({type:'image',img,x:cover.width/2,y:cover.height/2,scale:0.5,rotation:0,opacity:1}); pushState(); redrawAll(); }; img.src=URL.createObjectURL(file); };
+advDeleteLayer.onclick=()=>{ if(!selectedLayer) return; const idx=layers.indexOf(selectedLayer); if(idx>-1){ layers.splice(idx,1); selectedLayer=null; pushState(); redrawAll(); } };
+advUndo.onclick=()=>{ if(undoStack.length>1){ const current=undoStack.pop(); redoStack.push(current); restore(undoStack[undoStack.length-1]); } };
+advRedo.onclick=()=>{ if(redoStack.length){ const state=redoStack.pop(); undoStack.push(state); restore(state); } };
+advToggleGrid.onclick=()=>{ showGrid=!showGrid; redrawAll(); };
+advToggleBleed.onclick=()=>{ showBleed=!showBleed; redrawAll(); };
+function updateLayerList(){ const ul=document.getElementById('layerList'); if(!ul) return; ul.innerHTML=''; layers.forEach((l,i)=>{ const li=document.createElement('li'); li.className='layer-item'+(l===selectedLayer?' active':''); li.textContent=(l.type==='text'? (l.text.slice(0,18)||'Text') : 'Image')+' ['+i+']'; li.title='Click to select layer'; li.onclick=()=>{ selectedLayer=l; redrawAll(); }; ul.appendChild(li); }); }
+function restore(state){ try{ const arr=JSON.parse(state); layers.length=0; arr.forEach(o=> layers.push(o)); selectedLayer=null; redrawAll(); }catch(e){ console.warn('restore failed',e);} }
+document.getElementById('moveLayerUp').onclick=()=>{ if(!selectedLayer) return; const idx=layers.indexOf(selectedLayer); if(idx>0){ [layers[idx-1],layers[idx]]=[layers[idx],layers[idx-1]]; pushState(); redrawAll(); } };
+document.getElementById('moveLayerDown').onclick=()=>{ if(!selectedLayer) return; const idx=layers.indexOf(selectedLayer); if(idx<layers.length-1){ [layers[idx+1],layers[idx]]=[layers[idx],layers[idx+1]]; pushState(); redrawAll(); } };
+document.getElementById('duplicateLayer').onclick=()=>{ if(!selectedLayer) return; const c=JSON.parse(JSON.stringify(selectedLayer)); c.x+=30; c.y+=30; layers.push(c); pushState(); redrawAll(); };
+document.getElementById('downloadJPEG').onclick=()=>{ const a=document.createElement('a'); a.download='cover.jpg'; a.href=cover.toDataURL('image/jpeg',0.92); a.click(); };
+document.getElementById('downloadTransparent').onclick=()=>{ const a=document.createElement('a'); a.download='cover-transparent.png'; a.href=cover.toDataURL('image/png'); a.click(); };
+const toggleTheme=document.getElementById('toggleTheme'); if(toggleTheme){ toggleTheme.onclick=()=>{ document.body.classList.toggle('dark'); toggleTheme.textContent=document.body.classList.contains('dark')?'Light':'Dark'; }; }
+// Sync base inputs to existing layers when changed (title/subtitle edits)
+[title,titleSize,titleColor,subtitle,subtitleSize,subtitleColor].forEach(el=> el.addEventListener('input',()=>{ // update first two text layers if they exist
+ if(layers[0]){ layers[0].text=title.value||'Title'; layers[0].size=parseInt(titleSize.value)||72; layers[0].color=titleColor.value; }
+ if(layers[1]){ layers[1].text=subtitle.value||'Subtitle'; layers[1].size=parseInt(subtitleSize.value)||32; layers[1].color=subtitleColor.value; }
+ redrawAll(); }));
+</script>
+</body>
+</html>

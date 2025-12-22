@@ -1,0 +1,1046 @@
+/* Material 3 Daily Journal App - CSS */
+:root {
+  /* Material 3 Expressive Color Tokens - Cyan Black Theme */
+  --md3-primary: #00E6FF;
+  --md3-on-primary: #002024;
+  --md3-primary-container: #006671;
+  --md3-on-primary-container: #A1EBF7;
+  --md3-secondary: #B5CCD2;
+  --md3-on-secondary: #203439;
+  --md3-secondary-container: #364A50;
+  --md3-on-secondary-container: #D1E8EE;
+  --md3-tertiary: #A9C7E7;
+  --md3-on-tertiary: #13314B;
+  --md3-tertiary-container: #2B4763;
+  --md3-on-tertiary-container: #D6E3FF;
+  --md3-error: #FFB4AB;
+  --md3-on-error: #690005;
+  --md3-error-container: #93000A;
+  --md3-on-error-container: #FFDAD6;
+  --md3-background: #000000;
+  --md3-on-background: #E6E1E5;
+  --md3-surface: #000000;
+  --md3-on-surface: #E6E1E5;
+  --md3-surface-variant: #3F484A;
+  --md3-on-surface-variant: #BFC9CB;
+  --md3-outline: #899395;
+  --md3-shadow: #000000;
+  --md3-inverse-surface: #E6E1E5;
+  --md3-inverse-on-surface: #313033;
+  --md3-inverse-primary: #006671;
+  
+  /* Additional tokens for our app */
+  --md3-surface-bright: #303030;
+  --md3-surface-container-lowest: #000000;
+  --md3-surface-container-low: #101010;
+  --md3-surface-container: #151515;
+  --md3-surface-container-high: #202020;
+  --md3-surface-container-highest: #2B2B2B;
+  
+  /* Common variables */
+  --border-radius: 24px;
+  --border-radius-full: 50%;
+  --border-radius-large: 16px;
+  --border-radius-medium: 12px;
+  --border-radius-small: 8px;
+  --shadow-elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --shadow-elevation-2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --shadow-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px rgba(0, 0, 0, 0.3);
+  --transition: all 0.2s cubic-bezier(0.2, 0.0, 0, 1.0);
+  --font-size: 16px;
+  --font-family: "Roboto", "Segoe UI", system-ui, sans-serif;
+  
+  /* For better DPI scaling support */
+  --scale-factor: 1;
+  --md3-typescale-display-large-font-family: var(--font-family);
+  --md3-typescale-display-large-font-weight: 400;
+  --md3-typescale-display-large-line-height: 64px;
+  --md3-typescale-display-large-letter-spacing: -0.032em;
+  --md3-typescale-display-medium-font-family: var(--font-family);
+  --md3-typescale-display-medium-font-weight: 400;
+  --md3-typescale-display-medium-line-height: 52px;
+  --md3-typescale-display-medium-letter-spacing: -0.02em;
+  --md3-typescale-display-small-font-family: var(--font-family);
+  --md3-typescale-display-small-font-weight: 400;
+  --md3-typescale-display-small-line-height: 44px;
+  --md3-typescale-display-small-letter-spacing: 0em;
+  --md3-typescale-headline-large-font-family: var(--font-family);
+  --md3-typescale-headline-large-font-weight: 400;
+  --md3-typescale-headline-large-line-height: 40px;
+  --md3-typescale-headline-large-letter-spacing: 0em;
+  --md3-typescale-headline-medium-font-family: var(--font-family);
+  --md3-typescale-headline-medium-font-weight: 400;
+  --md3-typescale-headline-medium-line-height: 36px;
+  --md3-typescale-headline-medium-letter-spacing: 0em;
+  --md3-typescale-headline-small-font-family: var(--font-family);
+  --md3-typescale-headline-small-font-weight: 400;
+  --md3-typescale-headline-small-line-height: 32px;
+  --md3-typescale-headline-small-letter-spacing: 0em;
+  --md3-typescale-body-medium-font-family: var(--font-family);
+  --md3-typescale-body-medium-font-weight: 400;
+  --md3-typescale-body-medium-line-height: 20px;
+  --md3-typescale-body-medium-letter-spacing: 0.25px;
+  --md3-typescale-label-large-font-family: var(--font-family);
+  --md3-typescale-label-large-font-weight: 500;
+  --md3-typescale-label-large-line-height: 20px;
+  --md3-typescale-label-large-letter-spacing: 0.1px;
+  --md3-typescale-body-large-font-family: var(--font-family);
+  --md3-typescale-body-large-font-weight: 400;
+  --md3-typescale-body-large-line-height: 24px;
+  --md3-typescale-body-large-letter-spacing: 0.5px;
+  --md3-typescale-body-small-font-family: var(--font-family);
+  --md3-typescale-body-small-font-weight: 400;
+  --md3-typescale-body-small-line-height: 16px;
+  --md3-typescale-body-small-letter-spacing: 0.25px;
+  --md3-typescale-label-medium-font-family: var(--font-family);
+  --md3-typescale-label-medium-font-weight: 500;
+  --md3-typescale-label-medium-line-height: 16px;
+  --md3-typescale-label-medium-letter-spacing: 0.5px;
+  --md3-typescale-label-small-font-family: var(--font-family);
+  --md3-typescale-label-small-font-weight: 500;
+  --md3-typescale-label-small-line-height: 12px;
+  --md3-typescale-label-small-letter-spacing: 0.5px;
+}
+
+/* Light theme variables */
+[data-theme="dark"] {
+  --md3-primary: #006671;
+  --md3-on-primary: #FFFFFF;
+  --md3-primary-container: #A1EBF7;
+  --md3-on-primary-container: #002024;
+  --md3-secondary: #4A6267;
+  --md3-on-secondary: #FFFFFF;
+  --md3-secondary-container: #D1E8EE;
+  --md3-on-secondary-container: #051F23;
+  --md3-tertiary: #475E7A;
+  --md3-on-tertiary: #FFFFFF;
+  --md3-tertiary-container: #D6E3FF;
+  --md3-on-tertiary-container: #021A33;
+  --md3-error: #BA1A1A;
+  --md3-on-error: #FFFFFF;
+  --md3-error-container: #FFDAD6;
+  --md3-on-error-container: #410002;
+  --md3-background: #FBFDFD;
+  --md3-on-background: #191C1D;
+  --md3-surface: #FBFDFD;
+  --md3-on-surface: #191C1D;
+  --md3-surface-variant: #DBE5E6;
+  --md3-on-surface-variant: #3F484A;
+  --md3-outline: #6F797A;
+  --md3-shadow: #000000;
+  --md3-inverse-surface: #2E3132;
+  --md3-inverse-on-surface: #EFF1F2;
+  --md3-inverse-primary: #50D6E3;
+  
+  /* Additional tokens for our app */
+  --md3-surface-bright: #e0f7fa;
+  --md3-surface-container-lowest: #f0fcfd;
+  --md3-surface-container-low: #e9f5f7;
+  --md3-surface-container: #e3eef1;
+  --md3-surface-container-high: #dde8ec;
+  --md3-surface-container-highest: #d7e2e7;
+}
+
+/* Ocean Blue theme variables */
+[data-theme="blue"] {
+  --md3-primary: #006A6A;
+  --md3-on-primary: #FFFFFF;
+  --md3-primary-container: #6FF6F6;
+  --md3-on-primary-container: #002020;
+  --md3-secondary: #4A6262;
+  --md3-on-secondary: #FFFFFF;
+  --md3-secondary-container: #CCE7E7;
+  --md3-on-secondary-container: #051F1F;
+  --md3-tertiary: #515D7C;
+  --md3-on-tertiary: #FFFFFF;
+  --md3-tertiary-container: #D6E3FF;
+  --md3-on-tertiary-container: #0D1B37;
+  --md3-error: #BA1A1A;
+  --md3-on-error: #FFFFFF;
+  --md3-error-container: #FFDAD6;
+  --md3-on-error-container: #410002;
+  --md3-background: #FAFDFD;
+  --md3-on-background: #191C1C;
+  --md3-surface: #FAFDFD;
+  --md3-on-surface: #191C1C;
+  --md3-surface-variant: #DAE5E4;
+  --md3-on-surface-variant: #3F4948;
+  --md3-outline: #6F7979;
+  --md3-shadow: #000000;
+  --md3-inverse-surface: #2D3131;
+  --md3-inverse-on-surface: #EFF1F1;
+  --md3-inverse-primary: #4DD3D2;
+  
+  /* Additional tokens for our app */
+  --md3-surface-bright: #e0f7fa;
+  --md3-surface-container-lowest: #f0fcfd;
+  --md3-surface-container-low: #e9f5f7;
+  --md3-surface-container: #e3eef1;
+  --md3-surface-container-high: #dde8ec;
+  --md3-surface-container-highest: #d7e2e7;
+}
+
+/* Green theme variables */
+[data-theme="green"] {
+  --md3-primary: #3D6C1F;
+  --md3-on-primary: #FFFFFF;
+  --md3-primary-container: #BDE597;
+  --md3-on-primary-container: #092200;
+  --md3-secondary: #55624B;
+  --md3-on-secondary: #FFFFFF;
+  --md3-secondary-container: #D9E7CB;
+  --md3-on-secondary-container: #131F0D;
+  --md3-tertiary: #38656A;
+  --md3-on-tertiary: #FFFFFF;
+  --md3-tertiary-container: #BCEBF0;
+  --md3-on-tertiary-container: #001F22;
+  --md3-error: #BA1A1A;
+  --md3-on-error: #FFFFFF;
+  --md3-error-container: #FFDAD6;
+  --md3-on-error-container: #410002;
+  --md3-background: #F9FAF0;
+  --md3-on-background: #1A1D16;
+  --md3-surface: #F9FAF0;
+  --md3-on-surface: #1A1D16;
+  --md3-surface-variant: #E0E3D7;
+  --md3-on-surface-variant: #43483E;
+  --md3-outline: #74796D;
+  --md3-shadow: #000000;
+  --md3-inverse-surface: #2F312A;
+  --md3-inverse-on-surface: #F0F1E9;
+  --md3-inverse-primary: #A1C97A;
+  
+  /* Additional tokens for our app */
+  --md3-surface-bright: #e8f5e9;
+  --md3-surface-container-lowest: #f0fcf1;
+  --md3-surface-container-low: #e9f5ea;
+  --md3-surface-container: #e2eee3;
+  --md3-surface-container-high: #dce8dc;
+  --md3-surface-container-highest: #d6e2d6;
+}
+
+/* Material 3 Daily Journal App - CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--md3-background);
+  color: var(--md3-on-background);
+  transition: var(--transition);
+  min-height: 100vh;
+  font-size: var(--font-size);
+  overflow: hidden;
+}
+
+.md3-container {
+  display: flex;
+  height: 100vh;
+  background: var(--md3-background);
+  min-width: 600px; /* Minimum width to ensure usability */
+}
+
+.md3-navigation-drawer {
+  width: 300px;
+  min-width: 200px;
+  max-width: 500px;
+  background-color: var(--md3-surface-container-low);
+  border-right: 1px solid var(--md3-outline);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.2s ease;
+  overflow: hidden;
+  padding: 16px;
+  border-radius: 0 0 0 var(--border-radius-large);
+  position: relative;
+}
+
+/* Create a resize handle */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 10;
+  background: transparent;
+}
+
+.resize-handle:hover {
+  background: var(--md3-outline);
+}
+
+.md3-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0; /* Allows flex item to shrink below content size */
+}
+
+.nav-header {
+  padding: 8px 0 16px 0;
+  border-bottom: 1px solid var(--md3-outline);
+}
+
+.md3-typography-headline-small {
+  font-family: var(--md3-typescale-headline-small-font-family);
+  font-size: 20px;
+  font-weight: var(--md3-typescale-headline-small-font-weight);
+  line-height: var(--md3-typescale-headline-small-line-height);
+  letter-spacing: var(--md3-typescale-headline-small-letter-spacing);
+  color: var(--md3-on-surface);
+  margin: 0;
+}
+
+.entries-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 4px;
+}
+
+.entry-item {
+  padding: 16px;
+  border-radius: var(--border-radius-large);
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--md3-surface-container);
+  border: 1px solid var(--md3-outline);
+}
+
+.entry-item:hover {
+  background-color: var(--md3-surface-container-high);
+  box-shadow: var(--shadow-elevation-1);
+}
+
+.entry-item.active {
+  background-color: var(--md3-primary-container);
+  color: var(--md3-on-primary-container);
+  border-color: var(--md3-primary);
+}
+
+.entry-date {
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: var(--md3-on-surface);
+}
+
+.entry-preview {
+  font-size: 14px;
+  color: var(--md3-on-surface-variant);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-entries {
+  text-align: center;
+  color: var(--md3-on-surface-variant);
+  font-style: italic;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.md3-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.md3-app-bar {
+  background-color: var(--md3-surface-container-high);
+  color: var(--md3-on-surface);
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--md3-outline);
+  display: flex;
+  align-items: center;
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-icon {
+  font-size: 28px;
+  color: var(--md3-primary);
+}
+
+.md3-typography-headline-small {
+  font-family: var(--md3-typescale-headline-small-font-family);
+  font-size: 20px;
+  font-weight: var(--md3-typescale-headline-small-font-weight);
+  line-height: var(--md3-typescale-headline-small-line-height);
+  letter-spacing: var(--md3-typescale-headline-small-letter-spacing);
+  color: var(--md3-on-surface);
+  margin: 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.md3-icon-button {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--border-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--md3-on-surface);
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 12px;
+}
+
+.md3-icon-button:hover {
+  background-color: var(--md3-surface-variant);
+}
+
+.md3-content-container {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Changed from auto to hidden to prevent double scrollbars */
+  background: var(--md3-background);
+}
+
+.md3-card {
+  background: var(--md3-surface-container-low);
+  border-radius: var(--border-radius-large);
+  padding: 16px;
+  box-shadow: var(--shadow-elevation-1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--md3-outline);
+  flex: 1; /* Take up all available space */
+  min-height: 0; /* Allow it to shrink */
+  overflow: hidden;
+  height: 100%; /* Ensure it fills the container */
+  min-height: 0; /* Needed for flex child to shrink */
+}
+
+.journal-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 0 0 auto; /* Don't grow or shrink, just take needed space */
+  padding-bottom: 8px;
+}
+
+.date-field {
+  min-width: 180px;
+}
+
+.md3-input-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.md3-input-field input,
+.md3-input-field textarea,
+.md3-input-field select {
+  padding: 16px 16px 16px 16px;
+  border: none;
+  border-radius: var(--border-radius-medium);
+  background-color: var(--md3-surface);
+  color: var(--md3-on-surface);
+  font-size: 16px;
+  font-family: var(--font-family);
+  outline: none;
+  transition: border-color 0.2s;
+  border: 1px solid var(--md3-outline);
+  border-bottom: 1px solid var(--md3-outline);
+}
+
+.md3-input-field input:focus,
+.md3-input-field textarea:focus,
+.md3-input-field select:focus {
+  border: 2px solid var(--md3-primary);
+  border-bottom: 2px solid var(--md3-primary);
+}
+
+.md3-input-field input:focus,
+.md3-input-field textarea:focus,
+.md3-input-field select:focus {
+  border-bottom: 2px solid var(--md3-primary);
+}
+
+.md3-input-field label {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  color: var(--md3-on-surface-variant);
+  pointer-events: none;
+  transition: all 0.2s;
+  font-size: 16px;
+  font-family: var(--font-family);
+}
+
+.md3-input-field input:focus + label,
+.md3-input-field input:not(:placeholder-shown) + label,
+.md3-input-field textarea:focus + label,
+.md3-input-field textarea:not(:placeholder-shown) + label,
+.md3-input-field select:focus + label,
+.md3-input-field select:not(:placeholder-shown) + label {
+  top: 0;
+  left: 16px;
+  font-size: 12px;
+  color: var(--md3-primary);
+  background: var(--md3-surface);
+  padding: 0 4px;
+}
+
+.md3-input-field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2379747E' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 36px;
+}
+
+.journal-editor {
+  flex: 1 1 auto;
+  min-height: 40vh;  /* Reduced to ensure space for buttons */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.journal-textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 60vh;
+  resize: none;
+  line-height: 1.6;
+  font-family: var(--font-family);
+  font-size: calc(16px * var(--font-scale, 1)); /* For DPI scaling */
+  color: var(--md3-on-surface);
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--md3-outline);
+  padding: 16px;
+  flex: 1;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.journal-textarea::placeholder {
+  color: var(--md3-on-surface-variant);
+  opacity: 0.6;
+}
+
+/* Material 3 Icon Styles */
+.material-symbols-rounded {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
+
+.md3-icon-button .material-symbols-rounded {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.md3-filled-button .material-symbols-rounded,
+.md3-outlined-button .material-symbols-rounded,
+.md3-text-button .material-symbols-rounded {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.journal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  flex: 0 0 auto; /* Don't grow or shrink, just take needed space */
+  padding-top: 8px;
+}
+
+.md3-filled-button {
+  padding: 16px 24px;
+  border-radius: var(--border-radius-large);
+  border: none;
+  background-color: var(--md3-primary);
+  color: var(--md3-on-primary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.md3-filled-button:hover {
+  background-color: color-mix(in srgb, var(--md3-primary) 90%, white 10%);
+  box-shadow: var(--shadow-elevation-2);
+}
+
+.md3-filled-button:active {
+  background-color: color-mix(in srgb, var(--md3-primary) 80%, white 20%);
+}
+
+.md3-outlined-button {
+  padding: 16px 24px;
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--md3-outline);
+  background-color: transparent;
+  color: var(--md3-primary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.md3-outlined-button:hover {
+  background-color: var(--md3-surface-variant);
+  box-shadow: var(--shadow-elevation-1);
+}
+
+.md3-text-button {
+  padding: 12px 16px;
+  border-radius: var(--border-radius-large);
+  border: none;
+  background-color: transparent;
+  color: var(--md3-primary);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.md3-text-button:hover {
+  background-color: var(--md3-surface-variant);
+}
+
+.md3-footer {
+  height: 0;
+  padding: 0;
+  background-color: var(--md3-surface-container-high);
+  border-top: 1px solid var(--md3-outline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--md3-on-surface);
+  flex: 0 0 auto;
+}
+
+.md3-typography-body-medium {
+  font-family: var(--md3-typescale-body-medium-font-family, var(--font-family));
+  font-size: 14px;
+  font-weight: var(--md3-typescale-body-medium-font-weight, 400);
+  line-height: var(--md3-typescale-body-medium-line-height, 20px);
+  letter-spacing: var(--md3-typescale-body-medium-letter-spacing, 0.25px);
+  color: var(--md3-on-surface-variant);
+  margin: 0;
+}
+
+/* Dialog styles */
+.md3-dialog {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+.md3-dialog-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+}
+
+.md3-dialog-surface {
+  background: var(--md3-surface);
+  border-radius: var(--border-radius-large);
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-elevation-4);
+  overflow: hidden;
+  animation: slideIn 0.2s ease;
+}
+
+.md3-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  position: relative;
+}
+
+.md3-dialog-content {
+  padding: 8px 24px 24px 24px;
+  color: var(--md3-on-surface);
+}
+
+.md3-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px 24px 24px;
+  border-top: 1px solid var(--md3-outline);
+}
+
+.close-dialog {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Additional Material 3 Component Styles */
+
+/* Setting Group Styles */
+.setting-group {
+  margin-bottom: 24px;
+}
+
+.setting-group .md3-typography-label-large {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--md3-on-surface-variant);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+#font-size {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--md3-surface-variant);
+  outline: none;
+  -webkit-appearance: none;
+}
+
+#font-size::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--md3-primary);
+  cursor: pointer;
+}
+
+#font-size::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--md3-primary);
+  cursor: pointer;
+  border: none;
+}
+
+.color-picker {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--md3-outline);
+  border-radius: var(--border-radius-small);
+  background: var(--md3-surface);
+  cursor: pointer;
+}
+
+/* High DPI support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  :root {
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Responsive adjustments for Material 3 */
+@media (max-width: 768px) {
+  .md3-container {
+    flex-direction: column;
+  }
+  
+  .md3-navigation-drawer {
+    width: 100%;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid var(--md3-outline);
+    padding: 12px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .app-title {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .action-buttons {
+    align-self: flex-end;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .md3-content-container {
+    padding: 12px;
+  }
+  
+  .md3-card {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .journal-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .date-field {
+    min-width: auto;
+  }
+  
+  .journal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .md3-footer {
+    display: none; /* Completely hide footer on small screens to maximize space */
+  }
+  
+  .entry-info {
+    order: -1;
+  }
+  
+  .md3-filled-button, .md3-outlined-button, .md3-text-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .setting-group {
+    margin-bottom: 16px;
+  }
+  
+  .md3-dialog-surface {
+    max-width: calc(100% - 24px);
+    max-height: calc(100% - 24px);
+    margin: 12px;
+  }
+  
+  .md3-dialog-content {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  /* On mobile, make text area take up even more space */
+  .journal-editor {
+    min-height: 50vh;
+  }
+  
+  .journal-textarea {
+    min-height: 45vh;
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .md3-navigation-drawer {
+    height: 150px;
+    padding: 8px;
+  }
+  
+  .md3-content-container {
+    padding: 8px;
+  }
+  
+  .md3-card {
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  .journal-controls {
+    gap: 8px;
+  }
+  
+  .md3-app-bar {
+    padding: 8px;
+  }
+  
+  /* Make text area take maximum space on very small screens */
+  .journal-editor {
+    min-height: 45vh;
+  }
+  
+  .journal-textarea {
+    min-height: 40vh;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .md3-content-container {
+    padding: 32px;
+  }
+  
+  .md3-card {
+    padding: 32px;
+    gap: 24px;
+  }
+  
+  .journal-editor {
+    min-height: 65vh;
+  }
+  
+  .journal-textarea {
+    min-height: 60vh;
+  }
+}
+
+/* Focus states for accessibility */
+.md3-input-field input:focus,
+.md3-input-field textarea:focus,
+.md3-input-field select:focus {
+  outline: 2px solid var(--md3-primary);
+  outline-offset: -2px;
+}
+
+.md3-icon-button:focus {
+  outline: 2px solid var(--md3-primary);
+  outline-offset: 2px;
+}
+
+.md3-filled-button:focus {
+  outline: 2px solid var(--md3-primary);
+  outline-offset: 2px;
+}
+
+.md3-outlined-button:focus {
+  outline: 2px solid var(--md3-primary);
+  outline-offset: 2px;
+}
+
+.md3-text-button:focus {
+  outline: 2px solid var(--md3-primary);
+  outline-offset: 2px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .settings-bar {
+    align-self: flex-end;
+  }
+  
+  .journal-controls {
+    flex-direction: column;
+  }
+  
+  .date-input {
+    width: 100%;
+  }
+  
+  .journal-actions {
+    flex-direction: column;
+  }
+  
+  footer {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}

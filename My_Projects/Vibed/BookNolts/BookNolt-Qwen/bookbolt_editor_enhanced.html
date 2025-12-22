@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookBolt Pro - Advanced Writing Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --darker: #121826;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4ade80;
+            --warning: #facc15;
+            --danger: #f87171;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --toolbar-height: 50px;
+            --statusbar-height: 30px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e6e9ef 100%);
+            color: var(--dark);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-attachment: fixed;
+        }
+        
+        /* Editor Layout */
+        .editor-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            height: calc(100vh - var(--header-height));
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            margin: 20px;
+            background: white;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-right: 40px;
+        }
+        
+        .logo i {
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 12px;
+            margin-right: auto;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .header-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .word-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.03);
+        }
+        
+        .sidebar-header {
+            padding: 25px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--darker);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-title i {
+            color: var(--primary);
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #fafcff;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 28px;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+        }
+        
+        .templates-list {
+            list-style: none;
+        }
+        
+        .templates-list li {
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+        
+        .templates-list li:hover {
+            background: var(--light-gray);
+            transform: translateX(4px);
+        }
+        
+        .templates-list li.active {
+            background: rgba(67, 97, 238, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .templates-list li i {
+            width: 24px;
+            text-align: center;
+            color: var(--primary);
+        }
+        
+        .project-list {
+            list-style: none;
+        }
+        
+        .project-list li {
+            padding: 14px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        
+        .project-list li:hover {
+            background: var(--light-gray);
+            transform: translateX(4px);
+        }
+        
+        .project-list li.active {
+            background: rgba(67, 97, 238, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .project-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .project-info {
+            flex: 1;
+        }
+        
+        .project-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .project-meta {
+            font-size: 0.8rem;
+            color: var(--gray);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .stat-item {
+            margin-bottom: 15px;
+        }
+        
+        .stat-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-bar {
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .stat-progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        /* Main Editor */
+        .editor-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        
+        .editor-header {
+            padding: 18px 30px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+        }
+        
+        .editor-title {
+            flex: 1;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            color: var(--darker);
+            background: var(--light);
+        }
+        
+        .editor-title:focus {
+            outline: none;
+            background: #f0f4ff;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .editor-toolbar {
+            height: var(--toolbar-height);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--light-gray);
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+        }
+        
+        .toolbar-group {
+            display: flex;
+            border-right: 1px solid var(--light-gray);
+            padding-right: 18px;
+            margin-right: 18px;
+        }
+        
+        .toolbar-group:last-child {
+            border-right: none;
+            margin-right: 0;
+            padding-right: 0;
+        }
+        
+        .toolbar-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .toolbar-btn:hover {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+        
+        .toolbar-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--light-gray);
+            margin: 0 8px;
+        }
+        
+        .format-select {
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            padding: 6px 10px;
+            background: white;
+            color: var(--dark);
+            margin: 0 5px;
+        }
+        
+        .editor-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: #fafcff;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .editor-paper {
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            min-height: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+            padding: 50px;
+            line-height: 1.8;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            color: var(--darker);
+            position: relative;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .editor-paper:focus {
+            outline: none;
+        }
+        
+        #editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--darker);
+            background: transparent;
+            padding: 0;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            height: var(--statusbar-height);
+            padding: 0 20px;
+            background: var(--darker);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: white;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .sidebar-section, .project-list li, .templates-list li {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .sidebar-section:nth-child(2) { animation-delay: 0.1s; }
+        .sidebar-section:nth-child(3) { animation-delay: 0.2s; }
+        .sidebar-section:nth-child(4) { animation-delay: 0.3s; }
+        
+        /* Responsive */
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                position: absolute;
+                left: -100%;
+                top: var(--header-height);
+                height: calc(100vh - var(--header-height));
+                z-index: 90;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+        
+        /* Focus mode */
+        .focus-mode .editor-header,
+        .focus-mode .editor-toolbar,
+        .focus-mode .status-bar {
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .focus-mode .sidebar {
+            transform: translateX(calc(-1 * var(--sidebar-width)));
+        }
+        
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--light-gray);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <button class="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo">
+            <i class="fas fa-book-open"></i>
+            <span>BookBolt Pro</span>
+        </div>
+        <div class="header-controls">
+            <button class="btn btn-outline">
+                <i class="fas fa-file"></i> New
+            </button>
+            <button class="btn btn-outline">
+                <i class="fas fa-folder-open"></i> Open
+            </button>
+            <button class="btn btn-primary" id="save-btn">
+                <i class="fas fa-save"></i> Save
+            </button>
+        </div>
+        <div class="header-info">
+            <div class="word-count">
+                <i class="fas fa-font"></i> <span id="word-count">0</span> words
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">U</div>
+                <span>User</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Editor Layout -->
+    <div class="editor-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">
+                    <i class="fas fa-book-reader"></i> Writing Studio
+                </h2>
+                <button class="btn btn-outline">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-book"></i> Projects</h3>
+                    <ul class="project-list">
+                        <li class="active">
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-title">My Novel - Chapter 1</div>
+                                <div class="project-meta">
+                                    <span>Today, 10:30 AM</span>
+                                    <span>324 words</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-title">Short Story Collection</div>
+                                <div class="project-meta">
+                                    <span>Yesterday</span>
+                                    <span>1.2k words</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-title">Poetry Book</div>
+                                <div class="project-meta">
+                                    <span>Nov 18</span>
+                                    <span>856 words</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="project-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-title">Journal Entries</div>
+                                <div class="project-meta">
+                                    <span>Nov 15</span>
+                                    <span>2.4k words</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-clipboard-list"></i> Templates</h3>
+                    <ul class="templates-list">
+                        <li class="active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Novel Template</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-file-alt"></i>
+                            <span>Short Story Template</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-moon"></i>
+                            <span>Poetry Template</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-sticky-note"></i>
+                            <span>Notebook Template</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-bookmark"></i>
+                            <span>Journal Template</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-film"></i>
+                            <span>Screenplay Template</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-chart-line"></i> Writing Stats</h3>
+                    <div class="stats-card">
+                        <div class="stat-item">
+                            <div class="stat-header">
+                                <span>Words Today</span>
+                                <span>342/500</span>
+                            </div>
+                            <div class="stat-bar">
+                                <div class="stat-progress" style="width: 68%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-header">
+                                <span>Current Streak</span>
+                                <span>7 days</span>
+                            </div>
+                            <div class="stat-bar">
+                                <div class="stat-progress" style="width: 85%; background: var(--success);"></div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-header">
+                                <span>Weekly Goal</span>
+                                <span>2.1k/3k</span>
+                            </div>
+                            <div class="stat-bar">
+                                <div class="stat-progress" style="width: 70%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-magic"></i> AI Assistant</h3>
+                    <button class="btn btn-outline" style="width: 100%; margin-bottom: 12px; justify-content: flex-start;">
+                        <i class="fas fa-lightbulb"></i> Get Writing Ideas
+                    </button>
+                    <button class="btn btn-outline" style="width: 100%; justify-content: flex-start;">
+                        <i class="fas fa-spell-check"></i> Improve Writing
+                    </button>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-cloud"></i> Export</h3>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button class="btn btn-outline" style="width: 100%; justify-content: flex-start;">
+                            <i class="fas fa-file-pdf"></i> Export as PDF
+                        </button>
+                        <button class="btn btn-outline" style="width: 100%; justify-content: flex-start;">
+                            <i class="fas fa-file-alt"></i> Export as EPUB
+                        </button>
+                        <button class="btn btn-outline" style="width: 100%; justify-content: flex-start;">
+                            <i class="fas fa-file-word"></i> Export as DOCX
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Editor Area -->
+        <div class="editor-main">
+            <div class="editor-header">
+                <input type="text" class="editor-title" value="Chapter 1: The Beginning" placeholder="Enter title...">
+                <div class="editor-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="btn btn-outline" id="focus-mode-btn">
+                        <i class="fas fa-expand"></i> Focus Mode
+                    </button>
+                </div>
+            </div>
+            
+            <div class="editor-toolbar">
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Bold" data-command="bold">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Italic" data-command="italic">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Underline" data-command="underline">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                    <div class="toolbar-divider"></div>
+                    <button class="toolbar-btn" title="Strikethrough">
+                        <i class="fas fa-strikethrough"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Align Left">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Align Center">
+                        <i class="fas fa-align-center"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Align Right">
+                        <i class="fas fa-align-right"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Justify">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Bullet List">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Numbered List">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" title="Insert Image">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Insert Link">
+                        <i class="fas fa-link"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Insert Table">
+                        <i class="fas fa-table"></i>
+                    </button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <select class="format-select">
+                        <option>Normal</option>
+                        <option>Heading 1</option>
+                        <option>Heading 2</option>
+                        <option>Heading 3</option>
+                        <option>Quote</option>
+                        <option>Code</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="editor-content">
+                <div class="editor-paper">
+                    <div id="editor" contenteditable="true">In a land far away, where the mountains touch the sky and the rivers flow with ancient wisdom, there lived a young adventurer named Elara. She had always dreamed of exploring the forbidden forest that bordered her village, but the elders warned that dangerous creatures dwelt within its shadowy depths.
+
+On the morning of her twentieth birthday, Elara could contain her curiosity no longer. She packed a small satchel with provisions and set out at dawn, her heart pounding with excitement and fear in equal measure. The forest loomed before her, its twisted branches forming a natural archway that seemed to beckon her forward.
+
+As she stepped across the threshold, the world behind her faded from view. The air grew cooler and the light dimmer, filtered through a canopy so thick that only dappled sunlight reached the forest floor. Strange sounds echoed around her - the hoot of unfamiliar owls, the rustle of leaves, and something that might have been whispers on the wind.
+
+Elara pressed forward, her courage fortified by her lifelong desire to explore. She had no way of knowing that her journey would lead to discoveries that would change not only her life, but the fate of her entire world.
+
+Further along the path, she encountered a clearing where ancient ruins stood half-buried beneath moss and vines. At the center of the clearing, a stone pedestal held a glowing crystal that pulsed with a rhythm like a heartbeat. As she approached, the crystal's light intensified, and she felt a strange energy emanating from it.
+
+"What is this place?" she whispered to herself, not expecting an answer. But the forest seemed to respond, as if acknowledging her presence for the first time.
+
+This was just the beginning of what would become the greatest adventure of her life...</div>
+                </div>
+            </div>
+            
+            <div class="status-bar">
+                <div class="status-item">
+                    <i class="fas fa-keyboard"></i> <span>BookBolt Pro Editor</span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-font"></i> <span id="status-word-count">324</span> words
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-sync-alt"></i> Saved
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Editor functionality
+        const editor = document.getElementById('editor');
+        const wordCountElement = document.getElementById('word-count');
+        const statusWordCountElement = document.getElementById('status-word-count');
+        
+        // Update word count
+        function updateWordCount() {
+            const text = editor.innerText || editor.textContent;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            
+            wordCountElement.textContent = words;
+            statusWordCountElement.textContent = words;
+            
+            // Update project list with word count
+            const activeProject = document.querySelector('.project-list li.active .project-meta span:last-child');
+            if (activeProject) {
+                activeProject.textContent = `${words} words`;
+            }
+        }
+        
+        editor.addEventListener('input', updateWordCount);
+        updateWordCount(); // Initialize count
+        
+        // Formatting buttons functionality
+        const formatButtons = document.querySelectorAll('.toolbar-btn[data-command]');
+        formatButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const command = button.getAttribute('data-command');
+                document.execCommand(command, false, null);
+                editor.focus();
+                
+                // Toggle active state
+                button.classList.toggle('active');
+                setTimeout(() => {
+                    button.classList.remove('active');
+                }, 300);
+            });
+        });
+        
+        // Make editor content editable
+        editor.addEventListener('keydown', (e) => {
+            // Handle common formatting shortcuts
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'b':
+                        e.preventDefault();
+                        document.execCommand('bold', false, null);
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        document.execCommand('italic', false, null);
+                        break;
+                    case 'u':
+                        e.preventDefault();
+                        document.execCommand('underline', false, null);
+                        break;
+                    case 'z':
+                        e.preventDefault();
+                        document.execCommand('undo', false, null);
+                        break;
+                }
+            }
+        });
+        
+        // Template selection
+        const templateItems = document.querySelectorAll('.templates-list li');
+        templateItems.forEach(item => {
+            item.addEventListener('click', () => {
+                templateItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        // Project selection
+        const projectItems = document.querySelectorAll('.project-list li');
+        projectItems.forEach(item => {
+            item.addEventListener('click', () => {
+                projectItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Update editor title to match project
+                const title = item.querySelector('.project-title').textContent;
+                document.querySelector('.editor-title').value = title;
+            });
+        });
+        
+        // Save button functionality
+        const saveButton = document.getElementById('save-btn');
+        saveButton.addEventListener('click', () => {
+            // In a real app, this would save to a backend
+            const status = document.querySelector('.status-bar .status-item:last-child');
+            status.innerHTML = '<i class="fas fa-check"></i> Saved!';
+            
+            // Reset status after 2 seconds
+            setTimeout(() => {
+                status.innerHTML = '<i class="fas fa-sync-alt"></i> Saved';
+            }, 2000);
+            
+            // Add visual feedback
+            saveButton.innerHTML = '<i class="fas fa-check"></i> Saved';
+            setTimeout(() => {
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Save';
+            }, 2000);
+        });
+        
+        // Focus mode toggle
+        const focusModeButton = document.getElementById('focus-mode-btn');
+        focusModeButton.addEventListener('click', () => {
+            document.body.classList.toggle('focus-mode');
+            
+            if (document.body.classList.contains('focus-mode')) {
+                focusModeButton.innerHTML = '<i class="fas fa-compress"></i> Exit Focus';
+            } else {
+                focusModeButton.innerHTML = '<i class="fas fa-expand"></i> Focus Mode';
+            }
+        });
+        
+        // Auto-resize based on content
+        function autoResize() {
+            editor.style.height = 'auto';
+            editor.style.height = Math.max(editor.scrollHeight, 400) + 'px';
+        }
+        
+        editor.addEventListener('input', autoResize);
+        window.addEventListener('resize', autoResize);
+        autoResize(); // Initialize height
+        
+        // Add typing animation
+        editor.addEventListener('input', () => {
+            editor.parentElement.style.transition = 'none';
+            editor.parentElement.style.boxShadow = '0 8px 35px rgba(0, 0, 0, 0.1)';
+            
+            setTimeout(() => {
+                editor.parentElement.style.transition = 'box-shadow 0.3s ease';
+                editor.parentElement.style.boxShadow = '0 5px 25px rgba(0, 0, 0, 0.05)';
+            }, 10);
+        });
+        
+        // Responsive sidebar toggle
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+        }
+        
+        // Add placeholder when editor is empty
+        editor.addEventListener('focus', () => {
+            if (!editor.textContent.trim()) {
+                editor.innerHTML = '';
+            }
+        });
+        
+        editor.addEventListener('blur', () => {
+            if (!editor.textContent.trim()) {
+                editor.innerHTML = '<br>';
+            }
+        });
+    </script>
+</body>
+</html>
