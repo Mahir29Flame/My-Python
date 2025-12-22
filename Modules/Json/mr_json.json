@@ -1,0 +1,30 @@
+{
+    "category": "Electronics",
+    "items": [
+        {
+            "id": 101,
+            "name": "Laptop",
+            "brand": "Dell",
+            "price": 750.0,
+            "specs": {
+                "processor": "Intel i5",
+                "ram": "8GB",
+                "storage": "512GB SSD"
+            }
+        },
+        {
+            "id": 102,
+            "name": "Smartphone",
+            "brand": "Samsung",
+            "price": 500.0,
+            "specs": {
+                "screen": "6.5 inch",
+                "processor": "Exynos 2200",
+                "ram": "8GB",
+                "storage": "256GB",
+                "battery": "4500mAh",
+                "camera": "48MP"
+            }
+        }
+    ]
+}
