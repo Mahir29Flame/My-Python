@@ -4,3 +4,6 @@
 [submodule "My_Projects/Hard-Coded/Mid/Science-Calc"]
 	path = My_Projects/Hard-Coded/Mid/Science-Calc
 	url = https://github.com/Mahir29Flame/Science-Calc.git
+[submodule "My_Projects/Hard-Coded/Mini/RoboSpeaker"]
+	path = My_Projects/Hard-Coded/Mini/RoboSpeaker
+	url = https://github.com/Mahir29Flame/RoboSpeaker.git
