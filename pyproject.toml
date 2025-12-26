@@ -10,3 +10,8 @@ dependencies = [
     "textual-dev>=1.8.0",
     "u>=1.0.4",
 ]
+
+[tool.uv.workspace]
+members = [
+    "My_Projects/Hard-Coded/Mega/Farm-Security",
+]
