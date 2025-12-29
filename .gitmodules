@@ -10,3 +10,6 @@
 [submodule "My_Projects/Hard-Coded/Mid/Banglish-Dictionary"]
 	path = My_Projects/Hard-Coded/Mid/Banglish-Dictionary
 	url = https://github.com/Mahir29Flame/Banglish-Dictionary.git
+[submodule "My_Projects/Hard-Coded/Mega/NJine"]
+	path = My_Projects/Hard-Coded/Mega/NJine
+	url = https://github.com/The-NJ-Labs/NJine.git
