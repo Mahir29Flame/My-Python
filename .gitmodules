@@ -13,3 +13,6 @@
 [submodule "My_Projects/Hard-Coded/Mega/NJine"]
 	path = My_Projects/Hard-Coded/Mega/NJine
 	url = https://github.com/The-NJ-Labs/NJine.git
+[submodule "My_Projects/Hard-Coded/Mid/N-FileJ"]
+	path = My_Projects/Hard-Coded/Mid/N-FileJ
+	url = https://github.com/The-NJ-Labs/N-FileJ.git
