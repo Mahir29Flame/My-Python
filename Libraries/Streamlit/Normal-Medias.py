@@ -35,5 +35,5 @@ st.write("JSON:")
 st.json(json.json())
 
 st.image("https://www.w3schools.com/howto/img_fjords.jpg", caption="Fjords")
-st.image(Path("Libraries\Streamlit\static\illusion.png"), caption="Illution")
+st.image(Path("Libraries\Streamlit\static\illusion.png"), caption="Illusion")
 st.video("https://youtu.be/pJxeyK7it0o?si=g5Uh82T-rFv7pXjR")
