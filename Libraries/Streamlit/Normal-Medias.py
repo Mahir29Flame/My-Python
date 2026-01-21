@@ -36,4 +36,5 @@ st.json(json.json())
 
 st.image("https://www.w3schools.com/howto/img_fjords.jpg", caption="Fjords")
 st.image(Path("Libraries\Streamlit\static\illusion.png"), caption="Illusion")
+st.image("https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3aWN0dXk4eTdjemozazJlN29qdmlwZm01OGtsYnc4eWh6dGk1MHg5byZlcD12MV9naWZzX3RyZW5kaW5nJmN0PWc/3ov9k1173PdfJWRsoE/giphy.gif", caption="Gif")
 st.video("https://youtu.be/pJxeyK7it0o?si=g5Uh82T-rFv7pXjR")
