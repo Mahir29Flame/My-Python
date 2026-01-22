@@ -16,3 +16,6 @@
 [submodule "My_Projects/Hard-Coded/Mid/N-FileJ"]
 	path = My_Projects/Hard-Coded/Mid/N-FileJ
 	url = https://github.com/The-NJ-Labs/N-FileJ.git
+[submodule "Org-Site"]
+	path = Org-Site
+	url = https://github.com/The-NJ-Labs/The-NJ-Labs.github.io.git
